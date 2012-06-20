@@ -1,0 +1,50 @@
+python-codelib: Python interface to CodeLib algorithms
+======================================================
+
+[CodeLib] is collection of algorithms for applications in the area of
+Scientific Computing developed by the Konrad-Zuse-Zentrum für
+Informationstechnik [ZIB].
+
+The ZIB-CodeLib software is not freely distributable and is not included in
+this package. Sources for individual package may be downloaded from the
+[CodeLib] website.
+
+Supported algorithms
+--------------------
+
+Currently, the Python interface includes some algorithms for Nonlinear
+systems of equations and least squares, accessible through the `nonlin`
+module in the `codelib` package.
+-   [NLEQ1]: Newton-method, full or bandmode Jacobian, without rank-strategy
+-   [NLEQ1S]: Newton-method, sparse Jacobian, without rank-strategy, with
+    linear solver UMFPACK
+
+
+Installation
+------------
+
+The installation requires LAPACK, BLAS, UMFPACK and AMD development
+libraries as well as a Fortran and C compiler.
+
+First, one has to obtain the sources of the [CodeLib] library of supported
+packages mentioned above.
+* From [NLEQ1], extract the files `nleq1.f`, `wnorm.f`, `zibconst.f`,
+  `zibmon.f` and `zibsec.f` and put them in the `codelib/nleq1` directory.
+* From [NLEQ1S], extract the files `nleq1s.f`, `wnorm.f`, `zibconst.f`,
+  `zibmon.f` and `zibsec.f` as well as either `umfpack_interface.c` or
+  `y12m_interface.f` and `linalg_nleq1s.f` and put them in the
+  `codelib/nleq1s` directory.
+
+Then, to run the installation, one uses e.g. `python setup.py install
+--user`.
+
+Usage
+-----
+
+Currently, `codelib` ships one module `nonlin` which contains a function
+`root` from which either [NLEQ1] or [NLEQ1S] algorithms can be called.
+
+[CodeLib]: http://www.zib.de/en/numerik/software/codelib.html
+[ZIB]: http://www.zib.de
+[NLEQ1]: http://www.zib.de/en/numerik/software/ant/nleq1.html
+[NLEQ1S]: http://www.zib.de/en/numerik/software/ant/nleq1s.html

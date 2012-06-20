@@ -1,0 +1,52 @@
+!    -*- f90 -*-
+!
+!   Copyright (C) 2012 Denis Laxalde <denis@laxalde.org>
+!
+!   Licensed under the GNU GPL version 3 or higher.
+!
+! Note: the context of this file is case sensitive.
+
+python module fcn__user__routine
+    interface
+        subroutine fcn(n,x,f,ifail)
+            integer optional,check(len(x)>=n),depend(x) :: n=len(x)
+            double precision dimension(n) :: x
+            double precision dimension(n),intent(out),depend(n) :: f
+            integer :: ifail
+        end subroutine fcn
+    end interface
+end python module fcn__user__routine
+python module jac__user__routine
+    interface
+        subroutine jac(n,m1,x,a,ifail)
+            integer optional,check(len(x)>=n),depend(x) :: n=len(x)
+            integer optional,check(shape(a,0)==m1),depend(a) :: m1=shape(a,0)
+            double precision dimension(n) :: x
+            double precision dimension(m1,n),intent(out),depend(n) :: a
+            integer :: ifail
+        end subroutine jac
+    end interface
+end python module jac__user__routine
+python module _nleq1 ! in
+    interface  ! in :nleq1
+        subroutine nleq1(n,fcn,jac,x,xscal,rtol,iopt,ierr,liwk,iwk,lrwk,rwk) ! in :nleq1:nleq1.f
+            use fcn__user__routine
+            use jac__user__routine
+            integer optional,check(len(x)>=n),depend(x) :: n=len(x)
+            external fcn
+            external jac
+            double precision dimension(n),intent(in,out) :: x
+            double precision dimension(n),intent(in,out),depend(n) :: xscal
+            double precision intent(in,out) :: rtol
+            integer dimension(50),intent(in,out) :: iopt
+            integer intent(out) :: ierr
+            integer optional,check(len(iwk)>=liwk),depend(iwk) :: liwk=len(iwk)
+            integer dimension(liwk),intent(in,out) :: iwk
+            integer optional,check(len(rwk)>=lrwk),depend(rwk) :: lrwk=len(rwk)
+            double precision dimension(lrwk),intent(in,out) :: rwk
+        end subroutine nleq1
+    end interface 
+end python module _nleq1
+
+! This file was auto-generated with f2py (version:2).
+! See http://cens.ioc.ee/projects/f2py2e/

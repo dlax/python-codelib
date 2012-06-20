@@ -1,0 +1,5 @@
+*.pyc
+*.so
+*.swp
+codelib/version.py
+build

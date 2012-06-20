@@ -1,0 +1,55 @@
+!    -*- f90 -*-
+!
+!   Copyright (C) 2012 Denis Laxalde <denis@laxalde.org>
+!
+!   Licensed under the GNU GPL version 3 or higher.
+!
+! Note: the context of this file is case sensitive.
+
+python module fcn__user__routine
+    interface
+        subroutine fcn(n,x,f,ifail) ! in :nleq1s:nleq1s.f:niint:unknown_interface
+            integer, optional,check(len(x)>=n),depend(x) :: n=len(x)
+            double precision dimension(n) :: x
+            double precision dimension(n),depend(n),intent(out) :: f
+            integer :: ifail
+        end subroutine fcn
+    end interface
+end python module fcn__user__routine
+python module jac__user__routine
+    interface
+        subroutine jac(n,x,a,irow,icol,nfill,ifail) ! in :nleq1s:nleq1s.f:niint:unknown_interface
+            integer, optional,check(len(x)>=n),depend(x) :: n=len(x)
+            double precision dimension(n) :: x
+            double precision dimension(nfill),intent(out) :: a
+            integer dimension(nfill),depend(nfill),intent(out) :: irow
+            integer dimension(nfill),depend(nfill),intent(out) :: icol
+            integer intent(in,out) :: nfill
+            integer :: ifail
+        end subroutine jac
+    end interface
+end python module jac__user__routine
+python module _nleq1s ! in
+    interface  ! in :nleq1s
+        subroutine nleq1s(n,nfmax,fcn,jac,x,xscal,rtol,iopt,ierr,liwk,iwk,lrwk,rwk) ! in :nleq1s:nleq1s.f
+            use fcn__user__routine
+            use jac__user__routine
+            integer, optional,check(len(x)>=n),depend(x) :: n=len(x)
+            integer :: nfmax
+            external fcn
+            external jac
+            double precision dimension(n),intent(in,out) :: x
+            double precision dimension(n),depend(n),intent(in,out) :: xscal
+            double precision intent(in,out) :: rtol
+            integer dimension(50),intent(in,out) :: iopt
+            integer intent(out) :: ierr
+            integer, optional,check(len(iwk)>=liwk),depend(iwk) :: liwk=len(iwk)
+            integer dimension(liwk),intent(in,out) :: iwk
+            integer, optional,check(len(rwk)>=lrwk),depend(rwk) :: lrwk=len(rwk)
+            double precision dimension(lrwk),intent(in,out) :: rwk
+        end subroutine nleq1s
+    end interface 
+end python module _nleq1s
+
+! This file was auto-generated with f2py (version:2).
+! See http://cens.ioc.ee/projects/f2py2e/
