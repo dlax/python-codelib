@@ -35,8 +35,8 @@ def _set_options(method, n, nfmax=None, jacobian=False, **opts):
     genopt = ('rtol', 'maxit')
     # default options, updated using kw params
     gopt = dict(rtol=1e-10, maxit=50)
-    gopt.update(((k,v) for k, v in opts.iteritems() if k in genopt))
-    if method=='1': # NLEQ1 solver
+    gopt.update(((k, v) for k, v in opts.iteritems() if k in genopt))
+    if method == '1': # NLEQ1 solver
         # iopt
         iopt = np.zeros(50, dtype=int) # default options
         if jacobian:
@@ -164,12 +164,12 @@ def root(fun, x0, args=(), jac=None, options=None):
     """
     if options is None:
         options = dict()
-    sparse = options.get('sparse', False)
+    sparse_pb = options.get('sparse', False)
     x = np.asarray(x0)
     n = len(x0)
     if x.ndim != 1:
         raise ValueError('Only rank-1 variables are allowed')
-    if not sparse:
+    if not sparse_pb:
         gopt, iopt, iwk, rwk = _set_options('1', n,
                                             jacobian=(jac is not None),
                                             **options)
